@@ -2,7 +2,7 @@ use std::net::SocketAddr;
 
 use axum::{routing::get, Router};
 use library_api::{init, shutdown};
-use tracing::debug;
+use tracing::{debug, info};
 
 mod handlers;
 mod models;
@@ -20,9 +20,9 @@ async fn main() -> anyhow::Result<()> {
         .route("/books/:id", get(book_handler::by_id))
         .with_state(pool);
 
-    let addr: SocketAddr = "127.0.0.1:7676".parse().unwrap();
+    let addr: SocketAddr = "0.0.0.0:7676".parse().unwrap();
 
-    debug!("Listening on {}", addr.to_string());
+    info!("Listening on {}", addr.to_string());
 
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
