@@ -1,0 +1,14 @@
+# https://kubernetes.io/docs/concepts/workloads/pods/
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myfirstpod
+  labels:
+    app: web
+spec:
+  containers:
+  - name: myfirstpod
+    image: "nginx"
+    ports:
+    - containerPort: 80
+      name: http

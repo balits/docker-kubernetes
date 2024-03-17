@@ -4,6 +4,7 @@ pub mod init {
     use std::collections::HashMap;
     use tracing::{debug, error, info};
 
+    /// All of this was only applicable for docker-compose
     /// # tl;dr
     /// This server needs to be run with the --host=<host> option.
     /// If it is not found, host defaults to `db`, which is the
@@ -18,6 +19,7 @@ pub mod init {
     /// # Warning
     /// The database containers service name could change at any moment
     /// so gl hf! :D
+    #[allow(dead_code)]
     fn pg_host() -> String {
         match std::env::args().find(|arg| arg.starts_with("--host=")) {
             Some(s) => {
@@ -71,8 +73,9 @@ pub mod init {
     }
 
     fn build_db_url() -> anyhow::Result<String> {
-        let host = pg_host();
-
+        // this method was only applicable while using docker-compose,
+        // but after using kubernetes, the host is usually the name of the serive
+        //let host = pg_host();
         let env = std::env::vars().collect::<HashMap<String, String>>();
 
         let user = env
@@ -85,7 +88,9 @@ pub mod init {
             .get("POSTGRES_DB")
             .context("POSTGRES_DB environmental variable not set or found")?;
 
-        Ok(format!("postgres://{user}:{password}@{host}/{db_name}"))
+        Ok(format!(
+            "postgres://{user}:{password}@postgres-service/{db_name}"
+        ))
     }
 
     pub async fn create_pool() -> anyhow::Result<PgPool> {
