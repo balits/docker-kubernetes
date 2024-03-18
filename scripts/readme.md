@@ -64,19 +64,19 @@ bash (minikube docker-env)
   fish -c "k port-forward <pod> <your-port>:<pod-port>" &
   ```
 
-- ### apply
+- #### other stuff
   ```bash
     k apply -f <yaml-file>
   ```
-- ### utilties
-
   ```bash
-
     # configmap from file
     k create configmap <name> --from-env-file .env
 
     # or from ad-hoc definitions
     k create configmap <name> --from-literal=KEY=VALUE
+
+    # same with secrets
+    k create secret generic <name> --from-file=<path>
 
     k get <resource-name>
 
@@ -92,4 +92,7 @@ bash (minikube docker-env)
 
     # to delete something for good
     k scale <deployment> --replicas=0
+
+    # disabling a cronjob
+    k patch cronjobs <job-name> -p '{"spec" : {"suspend" : true }}'
   ```
